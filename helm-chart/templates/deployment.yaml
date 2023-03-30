@@ -1,0 +1,30 @@
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.appName }}
+  namespace: {{ .Values.namespace }}
+  labels:
+      name: {{ .Values.deployment.labels.xname }}
+      app: {{ .Values.appName }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      name: {{ .Values.deployment.labels.xname }}
+      app: {{ .Values.appName }}
+  template:
+    metadata:
+      labels:
+        name: {{ .Values.deployment.labels.xname }}
+        app: {{ .Values.appName }}
+    spec:
+      containers:
+      - name: private-cluster
+        image: "{{ .Values.image.name }}:{{ .Values.image.tag }}"
+        imagePullPolicy: 
+        ports:
+        - containerPort: {{ .Values.spec.ports.port }}
+          

@@ -1,0 +1,19 @@
+appName: nginx
+
+namespace: default
+
+deployment:
+  name: nginxpoddeployment
+  labels:
+    xname: nginx_pod
+
+image:
+  name: nginx
+  tag: latest
+
+spec:
+  type: LoadBalancer
+  ports:
+    port: 80
+
+replicas: 3
