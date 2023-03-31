@@ -12,11 +12,6 @@ provider "google" {
   region = "europe-central2"
 }
 
-provider "google-beta" {
-   project = "project-381418"
-  region = "europe-central2"
-  credentials = file("${local.credentials_file}")
-}
 
 data "google_client_config" "default" {}
 
