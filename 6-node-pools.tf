@@ -1,8 +1,8 @@
 resource "google_container_node_pool" "node_pool" {
   name = "node-pool"
   cluster = google_container_cluster.private-cluster.id
-  node_count = 2
-  location = "europe-central2-b"
+  location = var.zone
+  node_count = var.node_count
 
   node_config {
     preemptible = false
@@ -28,16 +28,13 @@ resource "google_container_node_pool" "node_pool" {
   ]
 }
 
-#resource "kubernetes_namespace" "reece_namespace" {
-#  metadata {
-#    name = "reece-namespace"
-#  }
-#}
+
 resource "null_resource" "provisioner" {
   provisioner "local-exec" {
-    command = "gcloud container clusters get-credentials private-cluster --zone europe-central2-b --project project-381418"
+    command = "gcloud container clusters get-credentials private-cluster --zone ${var.zone} --project ${var.project_id}"
   }
   depends_on = [
     google_container_node_pool.node_pool
   ]
 }
+

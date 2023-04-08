@@ -8,12 +8,8 @@ resource "google_project_service" "container" {
   disable_dependent_services = true
 }
 
-#resource "google_project_service" "artifactregistry" {
-#  service = "artifactregistry.googleapis.com"
-#}
-
 resource "google_compute_network" "main" {
-  name = "main"
+  name = var.network_name
   auto_create_subnetworks = false
 
   depends_on = [
@@ -23,21 +19,21 @@ resource "google_compute_network" "main" {
 }
 
 resource "google_compute_subnetwork" "pri-sub" {
-  name = "pri-sub"
+  name = var.subnetwork_name
   network = google_compute_network.main.id
-  ip_cidr_range = "10.0.0.0/18"
-  region = "europe-central2"
+  ip_cidr_range = var.subnetwork_ip_range
+  region = var.region
   private_ip_google_access = true
 
   secondary_ip_range  {
     range_name = "k8s-pod-range"
-    ip_cidr_range = "10.1.0.0/16"
+    ip_cidr_range = var.pod_ip_range
+  }
+  secondary_ip_range {
+    range_name = "k8s-service-range"
+    ip_cidr_range = var.service_ip_range
   }
 
-  secondary_ip_range {
-    ip_cidr_range = "10.2.0.0/20"
-    range_name = "k8s-service-range"
-  }
   depends_on = [
     google_compute_network.main
   ]
